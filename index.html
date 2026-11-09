@@ -1,0 +1,264 @@
+<!doctype html>
+<!-- 
+  Estructura principal de la pagina.
+  Aqui se organizan las diferentes secciones que el usuario puede ver.
+-->
+<html lang="es">
+<head>
+  <!-- Indica que la pagina puede mostrar correctamente caracteres como la ñ -->
+  <meta charset="utf-8">
+
+  <!-- Hace que la pagina se adapte mejor al tamaño de celulares y otras pantallas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>RutaMMAV: ruta de aprendizaje</title>
+
+  <!--
+    Estas son las fuentes que se usan en la pagina.
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="estilos.css">
+</head>
+
+<body>
+
+  <!--
+    Parte superior de la pagina.
+
+    Aqui se muestra el nombre de la plataforma y un pequeno mensaje
+    que explica para que sirve.
+
+    El saludo cambia dependiendo del nombre que el usuario guarde
+    en su perfil.
+  -->
+  <header class="encabezado">
+    <div class="marca">
+      <h1>RutaMMAV</h1>
+      <p>cuaderno para organizar qué estudiar de desarrollo web y su orden.</p>
+    </div>
+
+    <!-- Este texto se cambia desde JavaScript cuando el usuario guarda su nombre -->
+    <p id="saludo" class="saludo">Hola, usuario</p>
+  </header>
+
+  <!-- Aqui comienza el contenido principal de la pagina -->
+  <main class="contenedor">
+
+    <!--
+      Primera fila de la pagina.
+
+      En esta parte se encuentran la ruta de aprendizaje que crea el usuario
+      y la seccion donde se muestra su progreso.
+    -->
+    <section class="fila-ruta">
+
+      <!--
+        Seccion donde el usuario organiza los modulos que quiere estudiar.
+
+        Se usa una lista ordenada porque la posicion de cada modulo
+        representa el orden en que se va a estudiar.
+      -->
+      <section class="mi-ruta" aria-labelledby="t-ruta">
+        <div class="titulo-seccion">
+          <h2 id="t-ruta">Mi ruta</h2>
+
+          <!-- Este contador muestra cuantos modulos hay actualmente en la ruta -->
+          <span id="contador-ruta" class="chip">0 / 7 módulos</span>
+        </div>
+
+        <!-- Esta es la zona donde se agregan los modulos de la ruta -->
+        <div id="zona-ruta" class="zona-ruta">
+
+          <!-- Este mensaje solo aparece cuando todavia no hay modulos en la ruta -->
+          <p id="ruta-vacia" class="ruta-vacia">Soltar aquí el primer módulo.</p>
+
+          <ol id="lista-ruta" class="lista-ruta"></ol>
+        </div>
+
+        <!-- Aqui JavaScript muestra mensajes cuando una accion se realiza o cuando hay un error -->
+        <p id="aviso" class="aviso" role="status" aria-live="polite"></p>
+
+        <!-- Muestra un calculo aproximado del tiempo necesario para terminar la ruta -->
+        <p id="estimado" class="estimado"></p>
+
+        <!-- Este boton permite borrar todos los modulos y empezar otra vez -->
+        <button type="button" id="btn-reiniciar" class="btn peligro">Reiniciar ruta</button>
+      </section>
+
+      <!--
+        Seccion que muestra el progreso del usuario.
+
+      
+        JavaScript se encarga de dibujar dentro de el ,el porcentaje,
+        la barra de progreso y las insignias obtenidas.
+
+      -->
+      <article class="tarjeta-panel" aria-labelledby="t-progreso">
+        <h2 id="t-progreso">Progreso</h2>
+
+        <!-- JavaScript usa este canvas para dibujar la informacion del progreso -->
+        <canvas id="lienzo" role="img" aria-label="Progreso de la ruta"></canvas>
+
+        <!-- Aqui aparece un resumen escrito del progreso del usuario -->
+        <p id="resumen-progreso" class="resumen"></p>
+      </article>
+
+    </section>
+
+    <!--
+      Segunda fila de la pagina.
+      funciona como una zona donde se puede soltar un modulo
+      para quitarlo de la ruta.
+    -->
+    <section id="catalogo" class="catalogo" aria-labelledby="t-catalogo">
+      <div class="titulo-seccion">
+        <h2 id="t-catalogo">Módulos por ver </h2>
+        <p>Arrastrar un módulo a «Mi ruta» o usar el botón <strong>Agregar</strong>.</p>
+      </div>
+
+      <!-- Aqui JavaScript agrega las tarjetas de los diferentes modulos -->
+      <div id="lista-catalogo" class="rejilla-modulos"></div>
+    </section>
+
+    <!--
+      Tercera fila de la pagina.
+
+      Aqui se encuentran dos secciones, el perfil del usuario
+      y la informacion relacionada con su ubicacion.
+    -->
+    <section class="fila-datos">
+
+      <!--
+        Seccion del perfil.
+
+        El usuario puede guardar su nombre y la cantidad de horas
+        que puede estudiar por semana.
+
+        Estos datos se guardan en localStorage para que puedan
+        mantenerse cuando el usuario vuelva a abrir la pagina.
+
+        El formulario usa validaciones hechas con JavaScript, por eso
+        tiene novalidate para evitar los mensajes automaticos del navegador.
+      -->
+      <article class="tarjeta-panel" aria-labelledby="t-perfil">
+        <h2 id="t-perfil">Tu perfil</h2>
+
+        <form id="form-perfil" novalidate>
+          <label for="nombre">¿Cómo te llamas?</label>
+
+          <!-- Campo donde el usuario escribe su nombre -->
+          <input id="nombre" name="nombre" type="text" autocomplete="given-name"
+                 placeholder="Ej: Alexander" aria-describedby="nombre-error">
+
+          <!-- Aqui aparece el mensaje si hay un problema con el nombre -->
+          <p id="nombre-error" class="error" aria-live="polite"></p>
+
+          <label for="meta">Horas que puedes estudiar por semana</label>
+
+          <!-- Campo donde el usuario indica las horas que puede estudiar -->
+          <input id="meta" name="meta" type="number" inputmode="numeric"
+                 placeholder="Entre 2 y 40" aria-describedby="meta-error">
+
+          <!-- Aqui aparece el mensaje si hay un problema con las horas -->
+          <p id="meta-error" class="error" aria-live="polite"></p>
+
+          <!-- Guarda los datos escritos en el perfil -->
+          <button type="submit" class="btn">Guardar perfil</button>
+        </form>
+      </article>
+
+      <!--
+        Seccion ubicacion del usuario.
+        Cuando el usuario permite el acceso a su ubicacion, la pagina
+        busca cual es la biblioteca mas cercana.
+        Tambien puede elegir que tipo de bibliotecas quiere ver.
+        La ubicacion solo se solicita cuando se presiona el boton,
+        asi el navegador no pide permiso apenas se abre la pagina.
+      -->
+      <article class="tarjeta-panel" aria-labelledby="t-ubicacion">
+        <h2 id="t-ubicacion">¿Dónde estudiar hoy?</h2>
+
+        <!-- Permite elegir el tipo de biblioteca que prefiere el usuario -->
+        <label for="tipo-biblioteca">Bibliotecas que prefieres</label>
+
+        <select id="tipo-biblioteca">
+          <option value="todas">Todas</option>
+          <option value="publica">Públicas</option>
+          <option value="universitaria">Universitarias</option>
+        </select>
+
+        <!-- Aqui se muestran mensajes mientras se busca la ubicacion o si ocurre algun error -->
+        <p id="estado-ubicacion" class="estado-ubicacion" aria-live="polite">Comparte tu ubicación y te decimos qué biblioteca de Manizales te queda más cerca.</p>
+
+        <!--
+          Se muestra cuando ya se logro obtener la ubicacion
+          del usuario.
+        -->
+        <div id="datos-ubicacion" hidden>
+
+          <!-- Muestra las coordenadas actuales del usuario -->
+          <h3>Tu ubicación actual</h3>
+          <p id="coordenadas"></p>
+
+          <!-- Este enlace permite abrir la ubicacion en un mapa -->
+          <a id="enlace-mapa" class="enlace-mapa" target="_blank" rel="noopener">Ver en el mapa</a>
+
+          <!-- Aqui se muestra la biblioteca que se encuentra mas cerca -->
+          <h3 id="titulo-biblioteca">Biblioteca más cercana</h3>
+          <p id="biblioteca-cercana" class="sugerencia"></p>
+
+          <!-- Este enlace muestra una ruta para llegar caminando -->
+          <a id="como-llegar" class="enlace-mapa" target="_blank" rel="noopener">Cómo llegar caminando</a>
+
+          <!-- Lista donde se muestran otras bibliotecas que tambien estan cerca -->
+          <p class="subtitulo">Otras cerca:</p>
+          <ol id="otras-bibliotecas" class="lista-lugares"></ol>
+        </div>
+
+        <!-- Al presionar este boton se solicita la ubicacion al navegador -->
+        <button type="button" id="btn-ubicacion" class="btn secundario">Obtener ubicación</button>
+      </article>
+
+    </section>
+
+    <!--
+      Esta seccion muestra las reglas principales de la aplicacion.
+    -->
+    <section class="reglas" aria-labelledby="t-reglas">
+      <h2 id="t-reglas">Reglas de RutaMMAV</h2>
+      <ol>
+        <li><strong>Requisitos:</strong> un módulo solo entra a tu ruta si sus requisitos ya están antes que él.</li>
+        <li><strong>Máximo 7 módulos</strong> en la ruta, para no saturarte.</li>
+        <li><strong>No dejar huecos:</strong> no puedes quitar un módulo si otro de tu ruta lo necesita.</li>
+        <li><strong>Un solo foco:</strong> solo puedes tener un módulo «en curso» a la vez.</li>
+        <li><strong>Desbloqueo:</strong> para empezar un módulo, sus requisitos deben estar completados.</li>
+        <li><strong>Siguiente recomendado:</strong> la app resalta el próximo módulo de tu ruta que ya puedes empezar.</li>
+        <li><strong>Insignias:</strong> ganas medallas al completar ciertos módulos (por ejemplo, «Front básico» al terminar HTML5 y CSS).</li>
+        <li><strong>Biblioteca más cercana:</strong> con tu ubicación te recomendamos dónde estudiar, según el tipo de biblioteca que prefieras.</li>
+        <li><strong>Modo estudio:</strong> si estás en una biblioteca (a menos de 150 m), la app lo reconoce y te sugiere qué estudiar.</li>
+      </ol>
+    </section>
+
+  </main>
+
+  <!--
+    Parte final de la pagina.
+    El proyecto funciona directamente en el navegador y los datos
+    del usuario se guardan usando el almacenamiento local.
+  -->
+  <footer class="pie">
+    <p>Prototipo hecho solo con HTML, CSS y JavaScript. Tus datos se guardan en este navegador.</p>
+  </footer>
+
+  <!--
+  Estos archivos se cargan en este orden porque app.js usa
+  los datos de modulos.js y lugaresParaBiblioteca.js.
+-->
+  <script src="modulos.js"></script>
+  <script src="lugaresParaBiblioteca.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
